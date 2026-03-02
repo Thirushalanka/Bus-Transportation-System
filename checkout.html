@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - BusGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<script>
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+document.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", function(e) {
+        const href = this.getAttribute("href");
+
+        if (href && !href.startsWith("#") && !href.startsWith("javascript")) {
+            e.preventDefault();
+            document.body.classList.remove("fade-in");
+            document.body.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 300);
+        }
+    });
+});
+</script>
+
+<script>
+function revealOnScroll() {
+    const reveals = document.querySelectorAll(".reveal");
+
+    reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const visiblePoint = 100;
+
+        if (elementTop < windowHeight - visiblePoint) {
+            el.classList.add("active");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealOnScroll);
+</script>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-bus"></i> BusGo
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Routes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="auth.html" class="btn-login">Login</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
+
+<section class="checkout-page">
+
+    <h2>Passenger Details & Payment</h2>
+
+    <div class="checkout-container">
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+            <h3>Booking Summary</h3>
+            <p><strong>Route:</strong> Colombo → Kandy</p>
+            <p><strong>Seats:</strong> <span id="seatNumbers"></span></p>
+            <p><strong>Total:</strong> LKR <span id="finalTotal"></span></p>
+        </div>
+
+        <!-- Passenger Form -->
+        <form class="checkout-form" action="confirmation.html">
+
+            <h3>Passenger Information</h3>
+
+            <input type="text" placeholder="Full Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <input type="tel" placeholder="Phone Number" required>
+
+            <h3>Payment Method</h3>
+
+            <div class="payment-options">
+                <label><input type="radio" name="payment" required> Credit/Debit Card</label>
+                <label><input type="radio" name="payment"> Bank Transfer</label>
+                <label><input type="radio" name="payment"> Pay at Bus Station</label>
+            </div>
+
+            <button type="submit">Confirm Booking</button>
+
+        </form>
+
+    </div>
+
+</section>
+
+<script>
+const seats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
+const total = localStorage.getItem("totalAmount") || 0;
+
+document.getElementById("seatNumbers").innerText = seats.join(", ");
+document.getElementById("finalTotal").innerText = total;
+
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - BusGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<script>
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+document.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", function(e) {
+        const href = this.getAttribute("href");
+
+        if (href && !href.startsWith("#") && !href.startsWith("javascript")) {
+            e.preventDefault();
+            document.body.classList.remove("fade-in");
+            document.body.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 300);
+        }
+    });
+});
+</script>
+
+<script>
+function revealOnScroll() {
+    const reveals = document.querySelectorAll(".reveal");
+
+    reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const visiblePoint = 100;
+
+        if (elementTop < windowHeight - visiblePoint) {
+            el.classList.add("active");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealOnScroll);
+</script>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-bus"></i> BusGo
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Routes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="auth.html" class="btn-login">Login</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
+
+<section class="dashboard-page">
+
+    <div class="dashboard-header">
+        <h2>Welcome, <span id="userName"></span></h2>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <h3>Your Booking History</h3>
+
+    <div id="bookingList" class="booking-list">
+        <!-- Bookings appear here -->
+    </div>
+
+</section>
+
+<script>
+
+// Check logged in user
+const user = JSON.parse(localStorage.getItem("busgoUser"));
+if(!user){
+    window.location.href = "auth.html";
+}
+
+document.getElementById("userName").innerText = user.name;
+
+// Load bookings
+const bookings = JSON.parse(localStorage.getItem("busgoBookings")) || [];
+const bookingList = document.getElementById("bookingList");
+
+if(bookings.length === 0){
+    bookingList.innerHTML = "<p>No bookings yet.</p>";
+} else {
+    bookings.forEach(b => {
+        const card = document.createElement("div");
+        card.classList.add("booking-card");
+
+        card.innerHTML = `
+            <p><strong>Booking ID:</strong> ${b.id}</p>
+            <p><strong>Route:</strong> ${b.route}</p>
+            <p><strong>Seats:</strong> ${b.seats.join(", ")}</p>
+            <p><strong>Total:</strong> LKR ${b.total}</p>
+            <p><strong>Date:</strong> ${b.date}</p>
+        `;
+
+        bookingList.appendChild(card);
+    });
+}
+
+function logout(){
+    localStorage.removeItem("busgoUser");
+    window.location.href = "auth.html";
+}
+
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results - BusGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<script>
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+document.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", function(e) {
+        const href = this.getAttribute("href");
+
+        if (href && !href.startsWith("#") && !href.startsWith("javascript")) {
+            e.preventDefault();
+            document.body.classList.remove("fade-in");
+            document.body.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 300);
+        }
+    });
+});
+</script>
+
+<script>
+function revealOnScroll() {
+    const reveals = document.querySelectorAll(".reveal");
+
+    reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const visiblePoint = 100;
+
+        if (elementTop < windowHeight - visiblePoint) {
+            el.classList.add("active");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealOnScroll);
+</script>
+
+<body>
+
+    <nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-bus"></i> BusGo
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Routes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="auth.html" class="btn-login">Login</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
+
+
+<!-- Route Summary -->
+<section class="route-summary">
+    <div>
+        <h2><i class="fa-solid fa-route"></i> Colombo → Kandy</h2>
+        <p><i class="fa-solid fa-calendar-days"></i> 10 March 2026</p>
+    </div>
+    
+</section>
+
+<!-- Main Container -->
+<div class="results-container">
+
+   
+
+    <!-- Results -->
+    <section class="bus-results">
+
+
+        <!-- Bus Card 1 -->
+        <div class="bus-card">
+            <div class="bus-info">
+                <h3>ExpressLine Travels</h3>
+                <p>AC Luxury</p>
+            </div>
+
+            <div class="time-info">
+                <h3>08:00 AM</h3>
+                <p>5h 30m</p>
+                <h3>01:30 PM</h3>
+            </div>
+
+            <div class="price-info">
+                <h3>LKR 1500</h3>
+                <p>12 Seats Left</p>
+                <button onclick="location.href='seats.html'">Select Seats</button>
+            </div>
+        </div>
+
+        <!-- Bus Card 2 -->
+        <div class="bus-card">
+            <div class="bus-info">
+                <h3>National Bus Service</h3>
+                <p>Non-AC</p>
+            </div>
+
+            <div class="time-info">
+                <h3>10:00 AM</h3>
+                <p>6h</p>
+                <h3>04:00 PM</h3>
+            </div>
+
+            <div class="price-info">
+                <h3>LKR 900</h3>
+                <p>20 Seats Left</p>
+                <button onclick="location.href='seats.html'">Select Seats</button>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("active");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Confirmation - BusGo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<script>
+window.addEventListener("load", () => {
+    document.body.classList.add("fade-in");
+});
+
+document.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", function(e) {
+        const href = this.getAttribute("href");
+
+        if (href && !href.startsWith("#") && !href.startsWith("javascript")) {
+            e.preventDefault();
+            document.body.classList.remove("fade-in");
+            document.body.classList.add("fade-out");
+
+            setTimeout(() => {
+                window.location.href = href;
+            }, 300);
+        }
+    });
+});
+</script>
+
+<script>
+function revealOnScroll() {
+    const reveals = document.querySelectorAll(".reveal");
+
+    reveals.forEach(el => {
+        const windowHeight = window.innerHeight;
+        const elementTop = el.getBoundingClientRect().top;
+        const visiblePoint = 100;
+
+        if (elementTop < windowHeight - visiblePoint) {
+            el.classList.add("active");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealOnScroll);
+</script>
+
+<body>
+
+    <nav class="navbar">
+    <div class="logo">
+        <i class="fa-solid fa-bus"></i> BusGo
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Routes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="auth.html" class="btn-login">Login</a></li>
+    </ul>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
+
+<section class="confirmation-page">
+
+    <div class="confirmation-box">
+
+        <div class="success-icon">✓</div>
+
+        <h2>Booking Confirmed!</h2>
+        <p>Your ticket has been successfully booked.</p>
+
+        <div class="ticket-details">
+            <p><strong>Booking ID:</strong> <span id="bookingId"></span></p>
+            <p><strong>Route:</strong> Colombo → Kandy</p>
+            <p><strong>Seats:</strong> <span id="seatNumbers"></span></p>
+            <p><strong>Total Paid:</strong> LKR <span id="finalTotal"></span></p>
+        </div>
+
+        <div class="qr-box">
+            <p>Scan at Boarding</p>
+            <div class="fake-qr"></div>
+        </div>
+
+        <button onclick="window.location.href='index.html'">
+            Back to Home
+        </button>
+
+    </div>
+
+</section>
+
+<script>
+const seats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
+const total = localStorage.getItem("totalAmount") || 0;
+
+const bookingId = "BG" + Math.floor(Math.random() * 1000000);
+
+document.getElementById("bookingId").innerText = bookingId;
+document.getElementById("seatNumbers").innerText = seats.join(", ");
+document.getElementById("finalTotal").innerText = total;
+
+// Save booking to history
+let bookings = JSON.parse(localStorage.getItem("busgoBookings")) || [];
+
+const newBooking = {
+    id: bookingId,
+    route: "Colombo → Kandy",
+    seats: seats,
+    total: total,
+    date: new Date().toLocaleDateString()
+};
+
+bookings.push(newBooking);
+localStorage.setItem("busgoBookings", JSON.stringify(bookings));
+
+// Clear temporary storage
+localStorage.removeItem("selectedSeats");
+localStorage.removeItem("totalAmount");
+
+function toggleMenu(){
+    document.getElementById("navLinks").classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>
