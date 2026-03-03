@@ -87,13 +87,13 @@ window.addEventListener("scroll", revealOnScroll);
 <script>
 
 // Check logged in user
-const user = JSON.parse(localStorage.getItem("busgoUser"));
-if(!user){
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user) {
     window.location.href = "auth.html";
+} else {
+    document.getElementById("userName").innerText = user.name;
 }
-
-document.getElementById("userName").innerText = user.name;
-
 // Load bookings
 const bookings = JSON.parse(localStorage.getItem("busgoBookings")) || [];
 const bookingList = document.getElementById("bookingList");
@@ -118,7 +118,7 @@ if(bookings.length === 0){
 }
 
 function logout(){
-    localStorage.removeItem("busgoUser");
+    localStorage.removeItem("user");
     window.location.href = "auth.html";
 }
 

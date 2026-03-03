@@ -95,7 +95,7 @@ window.addEventListener("scroll", revealOnScroll);
 
 <script>
 
-// Tabs
+// Tabs Toggle
 const loginTab = document.getElementById("loginTab");
 const registerTab = document.getElementById("registerTab");
 const loginForm = document.getElementById("loginForm");
@@ -115,43 +115,68 @@ registerTab.onclick = () => {
     loginForm.classList.add("hidden");
 };
 
-// Register Logic
-registerForm.addEventListener("submit", function(e){
+
+// 🔥 Register (Connected to Backend)
+registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const name = document.getElementById("registerName").value;
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
 
-    const user = { name, email, password };
+    try {
+        const response = await fetch("http://localhost:5000/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, password })
+        });
 
-    localStorage.setItem("busgoUser", JSON.stringify(user));
+        const data = await response.json();
+        alert(data.message);
 
-    alert("Registration successful! Please login.");
-    registerForm.reset();
-    loginTab.click();
+        if(response.ok){
+            registerForm.reset();
+            loginTab.click();
+        }
+
+    } catch (error) {
+        alert("Registration failed.");
+    }
 });
 
-// Login Logic
-loginForm.addEventListener("submit", function(e){
+
+// 🔥 Login (Connected to Backend)
+loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
-    const storedUser = JSON.parse(localStorage.getItem("busgoUser"));
+    try {
+        const response = await fetch("http://localhost:5000/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
 
-    if(storedUser && email === storedUser.email && password === storedUser.password){
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-    } else {
-        alert("Invalid credentials.");
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Login Successful");
+            localStorage.setItem("user", JSON.stringify(data.user));
+            window.location.href = "dashboard.html";
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        alert("Login failed.");
     }
 });
-
-function toggleMenu(){
-    document.getElementById("navLinks").classList.toggle("active");
-}
 
 </script>
 
