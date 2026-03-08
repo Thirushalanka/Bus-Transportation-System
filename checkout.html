@@ -121,5 +121,50 @@ function toggleMenu(){
 
 </script>
 
+<script>
+
+document.querySelector("form").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if(!user){
+        alert("Please login first");
+        window.location.href = "auth.html";
+        return;
+    }
+
+    const seats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
+    const route = localStorage.getItem("selectedRoute") || "Colombo → Kandy";
+
+    const bookingData = {
+        userId: user._id,
+        route: route,
+        seats: seats,
+        total: seats.length * 1500,
+        date: new Date().toLocaleDateString()
+    };
+
+    const response = await fetch("http://localhost:5000/api/book",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(bookingData)
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+
+    if(response.ok){
+        window.location.href = "confirmation.html";
+    }
+
+});
+
+</script>
+
 </body>
 </html>
